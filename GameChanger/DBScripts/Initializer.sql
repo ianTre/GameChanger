@@ -260,7 +260,11 @@ END
 
 GO
 
-
-
+CREATE PROCEDURE [dbo].[ProvinceGetAll]
+    
+AS
+BEGIN
+    SELECT * from Province
+END
 
 
