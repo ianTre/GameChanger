@@ -1,0 +1,105 @@
+﻿@model GameChanger.Models.UserAccount
+
+@{
+    ViewData["Title"] = "NuevoUsuario";
+}
+
+<h1>Crear Nuevo Usuario</h1>
+
+<h4>Ingrese sus datos personales</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="NuevoUsuario">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label">Nombre de Usuario</label>
+                <input type="text" name="UserName" value="@Model.UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"> </span>             @* Esta linea valida lo que ingresa el usuario; Es lo mismo que:  @Html.ValidationMessageFor(x => x.UserName)*@
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Correo Electrónico</label>
+                <input asp-for="Email" value="@Model.Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DNI" class="control-label">Número de Documento</label>
+                <input asp-for="DNI" value="@Model.DNI" class="form-control" />
+                <span asp-validation-for="DNI" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Nombre/s</label>
+                <input asp-for="Name" value="@Model.Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Surname" class="control-label">Apellido/s</label>
+                <input asp-for="Surname" value="@Model.Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+
+           @* <div class="form-group">
+                <label asp-for="IdCountry" class="control-label">Pais</label>
+                <input asp-for="IdCountry" value="@Model.IdCountry" class="form-control" />
+                <span asp-validation-for="IdCountry" class="text-danger"></span>
+            </div>*@
+
+            <div class="form-group">
+                <label  class="control-label">Pais</label>
+                <input type="text" readonly value="Argentina" class="form-control" />
+            </div>
+
+           
+            <div class="form-group">
+                <label  class="control-label">Provincia</label>
+                <select name="IdProvince">
+                    @foreach (Province item in ViewBag.Provinces)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                    </select>  @*Lista(combobox) q se llena via ViewBag*@
+               
+
+                <span asp-validation-for="IdProvince" class="text-danger"></span>
+            </div>
+                       
+       
+            <div class="form-group">
+                <label asp-for="CreationDate" class="control-label"></label>
+                <input asp-for="CreationDate" class="form-control" />
+                <span asp-validation-for="CreationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDate" class="control-label"></label>
+                <input asp-for="BirthDate" class="form-control" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
