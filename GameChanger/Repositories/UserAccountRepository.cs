@@ -48,8 +48,35 @@ namespace GameChanger.Repositories
 
         }
 
+        internal List<Province> GetProvinces()
+        {
+            
+                List<Province> list = new List<Province>();
+                var connection = this.masterConnection;
+                SqlCommand command = new SqlCommand("dbo.ProvinceGetAll", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
 
 
+                connection.Open();
+                var reader = command.ExecuteReader();
+                bool isStillData = reader.Read();
+                while (isStillData == true)
+                {
+                    //TODO check for null data incoming from DB
+                    Province dataItem = new Province();
+                    dataItem.Id = Convert.ToInt32(reader.GetValue(0).ToString());
+                    dataItem.Name = Convert.ToString(reader.GetValue(1));
+                
+                    list.Add(dataItem);
+
+                    isStillData = reader.Read();
+                }
+
+                connection.Close();
+
+            return list;    
+
+        }
     }
 
 }

@@ -19,10 +19,12 @@ namespace GameChanger.Managers
 
         internal List<Province> GetProvinces()
         {
-            List<Province> provinces=new List<Province>();
-            provinces.Add(new Province(){Id=1,Name="Buenos Aires" });
-            provinces.Add(new Province() { Id = 2, Name = "Santa Fe" });
-            provinces.Add(new Province() { Id = 3, Name = "Cordoba" });
+             List<Province> provinces = _UserAccountRepository.GetProvinces();
+
+            //List<Province> provinces=new List<Province>();
+            //provinces.Add(new Province(){Id=1,Name="Buenos Aires" });
+            //provinces.Add(new Province() { Id = 2, Name = "Santa Fe" });
+            //provinces.Add(new Province() { Id = 3, Name = "Cordoba" });
 
             return provinces;
 
