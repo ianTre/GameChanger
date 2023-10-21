@@ -266,5 +266,12 @@ AS
 BEGIN
     SELECT * from Province
 END
+GO
 
+CREATE PROCEDURE [dbo].[UserAccountGetAll]
+
+AS
+BEGIN
+	SELECT * from UserAccount
+END
 

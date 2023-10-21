@@ -30,6 +30,22 @@ namespace GameChanger.Managers
 
 
         }
+     
+        public List<UserAccount> UserAccountGetAll()
+        {
+         List<UserAccount> list= _UserAccountRepository.UserAccountGetAll();
+            return list;
+        }
+
+        internal List<UserAccount> UserAccountGetByUserName(UserAccount data)
+        {
+            List<UserAccount> list = _UserAccountRepository.UserAccountGetAll();
+            list = list.Where(x => x.UserName == data.UserName).ToList();
+            return list;
+
+        }
+
+
     }
 
 }
