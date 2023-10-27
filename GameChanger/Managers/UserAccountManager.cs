@@ -45,7 +45,36 @@ namespace GameChanger.Managers
 
         }
 
+        internal bool ComprobDeDNI(string dni)
+        {
+            if (string.IsNullOrEmpty(dni)) 
+            {
 
+                return false;
+            
+            }
+            else
+            { string dniSinEspacios= dni.Trim();
+                try
+                {
+                    int dniNumero = Convert.ToInt32(dniSinEspacios);
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    //dni.Length < 7 || dni.Length > 8 Primero hay que sacarle los puntos antes de validar el length
+
+
+                    return false;
+                }
+                
+            }
+
+
+            return true;
+
+        }
     }
 
 }

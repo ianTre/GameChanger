@@ -72,6 +72,22 @@ namespace GameChanger.Controllers
                 ModelState.AddModelError("Email", "El Email ingresado no es válido");
                 valid = false;
             }
+
+            bool esDNI = _userAccountManager.ComprobDeDNI(data.DNI);
+            if (esDNI) 
+            {
+
+            }
+            else
+            {
+                ModelState.AddModelError("DNI", "Ingresar DNI es obligatorio");
+                valid = false;
+
+            }
+
+
+
+
             if (valid)
             {
                 data.CreationDate = DateTime.Now;
