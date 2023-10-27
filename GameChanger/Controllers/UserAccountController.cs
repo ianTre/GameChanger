@@ -15,9 +15,21 @@ namespace GameChanger.Controllers
             _mailValidatorManager = new MailValidatorManager();
         }
 
-
         public IActionResult Index()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string username,string passoword)
+        {
+            //Check for credentials
             return View();
         }
 
@@ -50,47 +62,29 @@ namespace GameChanger.Controllers
                 else
                 {
                     ModelState.AddModelError("UserName", "El nombre de usuario ya existe");
-
                     valid = false;
-
                 }
-
             }
 
             bool esMail = _mailValidatorManager.ComprobDeMail(data.Email);
             if (!esMail)
             {
                 ModelState.AddModelError("Email", "El Email ingresado no es válido");
-
                 valid = false;
-
             }
-
-
-
-
-
             if (valid)
-
             {
                 data.CreationDate = DateTime.Now;
                 data.IsActive = true;
                 _userAccountManager.Save(data);
                 return RedirectToAction("Index", "Home");
-
             }
             else
             {
                 var provinces = _userAccountManager.GetProvinces();
                 ViewBag.Provinces = provinces; // Sirve para sumar una lista u accesorios necesarios para una vista que no entran en el modelo original
                 return View("NuevoUsuario", data);
-            } // No Encuntra la vista correcta!!!!!!!!!!
-
-
-
-
-
+            } 
         }
-
     }
 }
