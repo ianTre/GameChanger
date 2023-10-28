@@ -1,16 +1,17 @@
 ﻿using GameChanger.Models;
 using GameChanger.Repositories;
+using System.Collections.Generic;
 
 namespace GameChanger.Managers
 {
-    public class UserAccountManager 
+    public class UserAccountManager
     {
         private UserAccountRepository _UserAccountRepository;
         public UserAccountManager()
         {
             _UserAccountRepository = new UserAccountRepository();
         }
-        
+
         public void Save(UserAccount user)
         {
             _UserAccountRepository.Save(user);
@@ -19,7 +20,7 @@ namespace GameChanger.Managers
 
         internal List<Province> GetProvinces()
         {
-             List<Province> provinces = _UserAccountRepository.GetProvinces();
+            List<Province> provinces = _UserAccountRepository.GetProvinces();
 
             //List<Province> provinces=new List<Province>();
             //provinces.Add(new Province(){Id=1,Name="Buenos Aires" });
@@ -30,10 +31,10 @@ namespace GameChanger.Managers
 
 
         }
-     
+
         public List<UserAccount> UserAccountGetAll()
         {
-         List<UserAccount> list= _UserAccountRepository.UserAccountGetAll();
+            List<UserAccount> list = _UserAccountRepository.UserAccountGetAll();
             return list;
         }
 
@@ -47,34 +48,32 @@ namespace GameChanger.Managers
 
         internal bool ComprobDeDNI(string dni)
         {
-            if (string.IsNullOrEmpty(dni)) 
+            if (string.IsNullOrEmpty(dni))
             {
-
                 return false;
-            
             }
             else
-            { string dniSinEspacios= dni.Trim();
+            {
                 try
                 {
-                    int dniNumero = Convert.ToInt32(dniSinEspacios);
-
+                    int dniNumero = Convert.ToInt32(dni);
+                    if (dni.Length < 7 || dni.Length > 8)
+                    {
+                        return false;
+                    }
                     return true;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    //dni.Length < 7 || dni.Length > 8 Primero hay que sacarle los puntos antes de validar el length
-
-
                     return false;
                 }
-                
+
+
+
             }
 
-
-            return true;
-
         }
+
     }
 
 }

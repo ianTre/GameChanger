@@ -1,6 +1,7 @@
 ﻿using GameChanger.Managers;
 using GameChanger.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace GameChanger.Controllers
 {
@@ -38,6 +39,7 @@ namespace GameChanger.Controllers
         {
             UserAccount model = new UserAccount();
             var provinces = _userAccountManager.GetProvinces();
+            model.BirthDate= DateTime.Now;
             ViewBag.Provinces = provinces; // Sirve para sumar una lista u accesorios necesarios para una vista que no entran en el modelo original
             return View("NuevoUsuario", model);
         }
@@ -73,22 +75,31 @@ namespace GameChanger.Controllers
                 valid = false;
             }
 
+            if (!string.IsNullOrEmpty(data.DNI))
+            {
+                data.DNI = data.DNI.Trim().Replace(".", "");
+            }
+            
             bool esDNI = _userAccountManager.ComprobDeDNI(data.DNI);
-            if (esDNI) 
+            if (!esDNI)  
             {
-
-            }
-            else
-            {
-                ModelState.AddModelError("DNI", "Ingresar DNI es obligatorio");
+                ModelState.AddModelError("DNI", "Ingresar DNI con Formato Válido");
                 valid = false;
+            }
 
+            if (string.IsNullOrEmpty(data.Name))
+            {
+                ModelState.AddModelError("Name", "Ingresar Nombre es obligatorio");
+                valid = false;
+            }
+            if (string.IsNullOrEmpty(data.Surname))
+            {
+                ModelState.AddModelError("Surname", "Ingresar Apellido es obligatorio");
+                valid = false;
             }
 
 
-
-
-            if (valid)
+            if (valid) //Ultimo paso
             {
                 data.CreationDate = DateTime.Now;
                 data.IsActive = true;
