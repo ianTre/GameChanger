@@ -31,7 +31,16 @@ namespace GameChanger.Controllers
         public IActionResult Login(string username,string passoword)
         {
             //Check for credentials
-            return View();
+            bool isLegit = _userAccountManager.CheckforCredentials(username, passoword);
+            if(!isLegit)
+            {
+                ViewData["ErrorFlag"] = "Las credenciales ingresadas no son correctas";
+                return View();
+            }
+            string palabra = "";
+            palabra = palabra.Replace(".", "");
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

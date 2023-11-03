@@ -74,6 +74,10 @@ namespace GameChanger.Managers
 
         }
 
+        internal bool CheckforCredentials(string username, string passoword)
+        {
+            return true;
+        }
     }
 
 }
