@@ -107,6 +107,14 @@ namespace GameChanger.Controllers
                 valid = false;
             }
 
+            //8 caracteres ,1 mayuscula , 1 numero, 1 simbolo
+            if (!string.IsNullOrEmpty(data.Password))
+            {
+                
+
+            }
+
+
 
             if (valid) //Ultimo paso
             {

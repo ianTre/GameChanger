@@ -76,19 +76,20 @@
 
             <div class="form-group">
                 <label asp-for="Password" class="control-label">Contraseña</label>
-                <input type="Password" name="Password" class="form-control" />
+                <input type="Password" id="password" name="Password" onfocusout="ValidatePassStrength()" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
+                <label hidden id="validacionPass" >La contraseñe debe contener al menos un numero , una mayuscula y un simbolo</label>
             </div>
 
             <div class="form-group">
                 <label  class="control-label">Repita Contraseña</label>
-                <input type="password" class="form-control" />
+                <input type="password" id="password2" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             
             <div class="form-group">
-                <input type="submit" value="Registrarse" class="btn btn-primary" />
+                <input type="submit" onclick="ComprobarPasswordsIdenticas()" value="Registrarse" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -98,6 +99,57 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<script type="text/javascript"> 
+    
+    function ComprobarPasswordsIdenticas(){
+        let ctrlpass1;
+        let ctrlpass2;
+        ctrlpass1 = document.getElementById("password");
+        ctrlpass2 = document.getElementById("password2");
+
+        if(ctrlpass1.value != ctrlpass2.value)
+        {
+            alert("las contraseñas ingresadas no son iguales");
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    }
+    
+    function ValidatePassStrength() {
+        checkForNumber();
+        checkForUpper();
+    }
+
+    function checkForNumber() {
+        let password = document.getElementById("password").value;
+        debugger;
+        let hasANumber = false;
+        for (let i = 0 ; i < password.length; i++)
+        {
+            let char = password.charAt(i);
+            if (!isNaN(char))
+            {
+                hasANumber = true;
+            }
+        }
+
+        if(!hasANumber)
+        {
+            document.getElementById("validacionPass").removeAttribute("hidden");
+        }
+        else
+        {
+            document.getElementById("validacionPass").setAttribute("hidden","hidden");
+            document.getElementById("validacionPass").setAttribute("class", "text-danger");
+
+        }
+
+    }
+
+        function checkForUpper(){
+
+        }
+        
+
+
+</script>             
