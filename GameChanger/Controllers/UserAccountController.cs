@@ -1,7 +1,9 @@
 ﻿using GameChanger.Managers;
 using GameChanger.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace GameChanger.Controllers
 {
@@ -28,7 +30,7 @@ namespace GameChanger.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string username,string passoword)
+        public async Task<IActionResult> Login(string username,string passoword)
         {
             //Check for credentials
             bool isLegit = _userAccountManager.CheckforCredentials(username, passoword);
@@ -37,9 +39,14 @@ namespace GameChanger.Controllers
                 ViewData["ErrorFlag"] = "Las credenciales ingresadas no son correctas";
                 return View();
             }
-            string palabra = "";
-            palabra = palabra.Replace(".", "");
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.Name,username)
+            };
+            var identity = new ClaimsIdentity(claims,"CookieAuthentication");
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync("CookieAuthentication", principal);
 
+            
             return RedirectToAction("Index");
         }
 
