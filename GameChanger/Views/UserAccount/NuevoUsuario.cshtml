@@ -168,20 +168,29 @@
 
     }
 
-    function checkForUpper()  // Acá hay que hacer esto bien; quedó medio pelo!!!!!!!
+    function checkForUpper()  
     {
-        debugger;
         let passOriginal= document.getElementById("password").value;
-        let passLower = document.getElementById("password").value.toLowerCase;
+        let passLower = passOriginal.toLowerCase();
         let passUpper = passOriginal.toUpperCase();
         let hasAnUpper= false;
+
         for (let i = 0; i < passOriginal.length; i++) {
             let charOrig = passOriginal.charAt(i);
+            let charLower = passLower.charAt(i);
             let charUpper = passUpper.charAt(i);
 
-            if (charOrig == charUpper) {
-                hasAnUpper = true;
-                break;
+            if (charLower == charUpper)
+            {
+                continue;
+            }
+            else 
+            { 
+                if (charOrig == charUpper) 
+                {
+                    hasAnUpper = true;
+                    break;
+                }
             }
                      
         }
