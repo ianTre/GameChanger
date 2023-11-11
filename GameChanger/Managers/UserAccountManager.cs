@@ -74,7 +74,7 @@ namespace GameChanger.Managers
 
         }
 
-        internal bool CheckforCredentials(string username, string passoword)
+        internal bool CheckforCredentials(string username, string passoword) //terminar con Germán tiene que chequear que el usuario y las pass coincidan y existan
         {
             return true;
         }

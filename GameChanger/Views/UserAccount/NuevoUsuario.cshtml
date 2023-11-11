@@ -10,9 +10,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="New" asp-controller="UserAccount"> 
+        <form asp-action="New" asp-controller="UserAccount">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-         
+
             <div class="form-group">
                 <label asp-for="UserName" class="control-label">Nombre de Usuario</label>
                 <input type="text" name="UserName" value="@Model.UserName" class="form-control" />
@@ -43,31 +43,31 @@
                 <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
 
-           @* <div class="form-group">
-                <label asp-for="IdCountry" class="control-label">Pais</label>
-                <input asp-for="IdCountry" value="@Model.IdCountry" class="form-control" />
-                <span asp-validation-for="IdCountry" class="text-danger"></span>
+            @* <div class="form-group">
+            <label asp-for="IdCountry" class="control-label">Pais</label>
+            <input asp-for="IdCountry" value="@Model.IdCountry" class="form-control" />
+            <span asp-validation-for="IdCountry" class="text-danger"></span>
             </div>*@
 
             <div class="form-group">
-                <label  class="control-label">Pais</label>
+                <label class="control-label">Pais</label>
                 <input type="text" readonly value="Argentina" class="form-control" />
             </div>
 
-           
+
             <div class="form-group">
-                <label  class="control-label">Provincia</label>
+                <label class="control-label">Provincia</label>
                 <select name="IdProvince">
                     @foreach (Province item in ViewBag.Provinces)
                     {
                         <option value="@item.Id">@item.Name</option>
                     }
-                    </select>  @*Lista(combobox) q se llena via ViewBag*@
-               
+                </select>  @*Lista(combobox) q se llena via ViewBag*@
+
             </div>
-                       
-       
-            
+
+
+
             <div class="form-group">
                 <label asp-for="BirthDate" class="control-label">Fecha de Nacimiento</label>
                 <input asp-for="BirthDate" class="form-control" />
@@ -78,16 +78,17 @@
                 <label asp-for="Password" class="control-label">Contraseña</label>
                 <input type="Password" id="password" name="Password" onfocusout="ValidatePassStrength()" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
-                <label hidden id="validacionPass" >La contraseñe debe contener al menos un numero , una mayuscula y un simbolo</label>
+                <label hidden id="validacionPass"> </label>
+                
             </div>
 
             <div class="form-group">
-                <label  class="control-label">Repita Contraseña</label>
+                <label class="control-label">Repita Contraseña</label>
                 <input type="password" id="password2" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-            
+
             <div class="form-group">
                 <input type="submit" onclick="ComprobarPasswordsIdenticas()" value="Registrarse" class="btn btn-primary" />
             </div>
@@ -99,57 +100,105 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<script type="text/javascript"> 
-    
-    function ComprobarPasswordsIdenticas(){
+<script type="text/javascript">
+
+    function ComprobarPasswordsIdenticas() {
         let ctrlpass1;
         let ctrlpass2;
         ctrlpass1 = document.getElementById("password");
         ctrlpass2 = document.getElementById("password2");
 
-        if(ctrlpass1.value != ctrlpass2.value)
-        {
+        if (ctrlpass1.value != ctrlpass2.value) {
             alert("las contraseñas ingresadas no son iguales");
             event.stopPropagation();
             event.preventDefault();
         }
     }
-    
+
     function ValidatePassStrength() {
         checkForNumber();
+        checkForLength();
         checkForUpper();
     }
 
     function checkForNumber() {
         let password = document.getElementById("password").value;
-        debugger;
         let hasANumber = false;
-        for (let i = 0 ; i < password.length; i++)
-        {
+        for (let i = 0; i < password.length; i++) {
             let char = password.charAt(i);
-            if (!isNaN(char))
-            {
+            if (!isNaN(char)) {
                 hasANumber = true;
             }
         }
 
-        if(!hasANumber)
-        {
+        if (!hasANumber) {
             document.getElementById("validacionPass").removeAttribute("hidden");
-        }
-        else
-        {
-            document.getElementById("validacionPass").setAttribute("hidden","hidden");
             document.getElementById("validacionPass").setAttribute("class", "text-danger");
+            document.getElementById("validacionPass").innerHTML = "La Contraseña debe contener al menos un Número, una Mayúscula y un Caracter";
+
+        }
+        else {
+            document.getElementById("validacionPass").setAttribute("hidden", "hidden");
 
         }
 
     }
 
-        function checkForUpper(){
+    function checkForLength() 
+    {
+        let intForLength
+        let ctrlLength
+        ctrlLength = document.getElementById("password").value;
+
+
+        intForLength = ctrlLength.length;
+        if (intForLength > 16 || intForLength < 8) 
+        {
+            document.getElementById("validacionPass").removeAttribute("hidden");
+            document.getElementById("validacionPass").setAttribute("class", "text-danger");
+            document.getElementById("validacionPass").innerHTML ="La Contraseña debe contener entre 8 y 16 caracteres";
+            
+        }
+        else 
+        {
+            document.getElementById("validacionPass").setAttribute("hidden", "hidden");
 
         }
-        
 
 
-</script>             
+    }
+
+    function checkForUpper()  // Acá hay que hacer esto bien; quedó medio pelo!!!!!!!
+    {
+        debugger;
+        let passOriginal= document.getElementById("password").value;
+        let passLower = document.getElementById("password").value.toLowerCase;
+        let passUpper = passOriginal.toUpperCase();
+        let hasAnUpper= false;
+        for (let i = 0; i < passOriginal.length; i++) {
+            let charOrig = passOriginal.charAt(i);
+            let charUpper = passUpper.charAt(i);
+
+            if (charOrig == charUpper) {
+                hasAnUpper = true;
+                break;
+            }
+                     
+        }
+        if(hasAnUpper)
+        {
+            document.getElementById("validacionPass").setAttribute("hidden", "hidden");
+
+        }
+        else
+        {
+            document.getElementById("validacionPass").removeAttribute("hidden");
+            document.getElementById("validacionPass").setAttribute("class", "text-danger");
+            document.getElementById("validacionPass").innerHTML = "La Contraseña debe contener al menos una Mayúscula";
+        }
+
+
+    }
+
+
+</script>
