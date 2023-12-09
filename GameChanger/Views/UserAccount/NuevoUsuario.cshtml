@@ -58,15 +58,20 @@
             <div class="form-group">
                 <label class="control-label">Provincia</label>
                 <select name="IdProvince">
-                    @foreach (Province item in ViewBag.Provinces)
+                    @foreach (Province prov in ViewBag.Provinces)
                     {
-                        <option value="@item.Id">@item.Name</option>
+                        @if (@Model.IdProvince != 0 && @Model.IdProvince == prov.Id)
+                        {
+                            <option value="@prov.Id" selected>@prov.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@prov.Id">@prov.Name</option>
+                        }
                     }
-                </select>  @*Lista(combobox) q se llena via ViewBag*@
+                </select>  
 
             </div>
-
-
 
             <div class="form-group">
                 <label asp-for="BirthDate" class="control-label">Fecha de Nacimiento</label>
@@ -76,7 +81,7 @@
 
             <div class="form-group">
                 <label asp-for="Password" class="control-label">Contraseña</label>
-                <input type="Password" id="password" name="Password" onfocusout="ValidatePassStrength()" class="form-control" />
+                <input type="Password" id="password" value="@Model.Password" name="Password" onfocusout="ValidatePassStrength()" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
                 <label hidden id="validacionPass"> </label>
                 
@@ -84,7 +89,7 @@
 
             <div class="form-group">
                 <label class="control-label">Repita Contraseña</label>
-                <input type="password" id="password2" class="form-control" />
+                <input type="password" id="password2" value="@Model.Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 

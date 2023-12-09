@@ -2,6 +2,7 @@
 using GameChanger.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 
@@ -115,9 +116,18 @@ namespace GameChanger.Controllers
             }
 
             //8 caracteres ,1 mayuscula , 1 numero, 1 simbolo
-            if (!string.IsNullOrEmpty(data.Password))
+            if (string.IsNullOrEmpty(data.Password))
             {
-                
+                ModelState.AddModelError("Password", "Ingresar Contraseña es obligatorio");
+                valid = false;
+
+                if(!PasswordLenghtIsCorrect(data.Password) || !PasswordHasUpperCase(data.Password) || !PasswordHasNumber(data.Password) || !PasswordHasSpecialChar(data.Password))
+                {
+                    ModelState.AddModelError("Password", "La contraseña debe tener al menos 8 carecteres con una mayuscula 1 numero y un simbolo");
+                    valid = false;
+                }
+
+
 
             }
 
@@ -136,6 +146,72 @@ namespace GameChanger.Controllers
                 ViewBag.Provinces = provinces; // Sirve para sumar una lista u accesorios necesarios para una vista que no entran en el modelo original
                 return View("NuevoUsuario", data);
             } 
+        }
+
+        private bool PasswordHasSpecialChar(string password) //!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+        {
+            string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+            
+            foreach (char c in password)
+            {
+                foreach (char c2 in symbols) 
+                {
+                    if (c == c2) 
+                    return true;
+                }
+
+            }
+            return false;
+
+        }
+
+        private bool PasswordHasNumber(string password)
+        {
+            
+            bool isNum = false;  
+            int result;
+            foreach (char item in password)
+            {
+              isNum= int.TryParse(item.ToString(), out result);
+                if (isNum)
+                {
+                    return true;
+
+                }
+            }
+             return false;  
+
+        }
+
+        private bool PasswordHasUpperCase(string password)
+        {   
+         
+            string passUpper = password.ToUpper();
+            string passOrig =password;
+            int n = 0;
+            foreach (char c in passUpper )
+            { 
+                if ( c == passOrig[n])
+                {
+                    return true;
+
+                }
+                else
+                {
+                    n++;
+                } 
+                
+            }
+                    return false;   
+        }
+
+        private bool PasswordLenghtIsCorrect(string password)
+        {
+            if (password.Length> 7 && password.Length<17)
+            {
+              return true;
+            }
+            return false;
         }
     }
 }
