@@ -128,8 +128,29 @@ namespace GameChanger.Repositories
 
 
         }
-    
-    
+
+        internal string GetProvinceById(int id)
+        {
+            string province;
+            List<Province> list = GetProvinces();
+            province = list.Where(x => x.Id == id).First().Name;
+            return province;
+
+        }
+
+        internal void Delete(int id)
+        {
+            var connection = this.masterConnection;
+            SqlCommand command = new SqlCommand("dbo.UserAccountDelete", connection);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+
+            command.Parameters.Add("@id", SqlDbType.Int).Value = id;
+
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+
+        }
     }
 
 }

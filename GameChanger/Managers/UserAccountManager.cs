@@ -78,6 +78,40 @@ namespace GameChanger.Managers
         {
             return true;
         }
+
+        internal List<UserAccountViewModel> UserAccountViewModelGetAll()
+        {
+            List<UserAccount> fulllist = _UserAccountRepository.UserAccountGetAll();
+            List<UserAccountViewModel> modelList= new List<UserAccountViewModel>();
+            foreach (UserAccount account in fulllist) 
+            {
+                UserAccountViewModel viewModel = new UserAccountViewModel();
+
+                string province = _UserAccountRepository.GetProvinceById(account.IdProvince);
+
+              viewModel.Id = account.Id;
+              viewModel.UserName = account.UserName;
+              viewModel.Email = account.Email;
+              viewModel.DNI = account.DNI;
+              viewModel.Name = account.Name;
+              viewModel.Surname = account.Surname;
+              viewModel.Country = "Argentina";
+              viewModel.Province = province;
+              viewModel.CreationDate = account.CreationDate;
+              viewModel.BirthDate = account.BirthDate;
+              viewModel.IsActive = account.IsActive;
+              
+              modelList.Add(viewModel);
+
+            }
+            return modelList;
+        }
+
+        internal void Delete(int id)
+        {
+            _UserAccountRepository.Delete(id);
+
+        }
     }
 
 }

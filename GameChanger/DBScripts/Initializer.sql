@@ -274,4 +274,16 @@ AS
 BEGIN
 	SELECT * from UserAccount
 END
+GO
 
+CREATE PROCEDURE [dbo].[UserAccountDelete]
+    (
+        @id int
+    )
+AS
+BEGIN
+    UPDATE [dbo].[UserAccount]
+   SET [IsActive] = 0
+ WHERE Id=@id
+ END
+GO

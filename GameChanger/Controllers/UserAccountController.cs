@@ -2,6 +2,7 @@
 using GameChanger.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -31,11 +32,11 @@ namespace GameChanger.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string username,string passoword)
+        public async Task<IActionResult> Login(string username, string passoword)
         {
             //Check for credentials
             bool isLegit = _userAccountManager.CheckforCredentials(username, passoword);
-            if(!isLegit)
+            if (!isLegit)
             {
                 ViewData["ErrorFlag"] = "Las credenciales ingresadas no son correctas";
                 return View();
@@ -43,11 +44,11 @@ namespace GameChanger.Controllers
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Name,username)
             };
-            var identity = new ClaimsIdentity(claims,"CookieAuthentication");
+            var identity = new ClaimsIdentity(claims, "CookieAuthentication");
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync("CookieAuthentication", principal);
 
-            
+
             return RedirectToAction("Index");
         }
 
@@ -56,7 +57,7 @@ namespace GameChanger.Controllers
         {
             UserAccount model = new UserAccount();
             var provinces = _userAccountManager.GetProvinces();
-            model.BirthDate= DateTime.Now;
+            model.BirthDate = DateTime.Now;
             ViewBag.Provinces = provinces; // Sirve para sumar una lista u accesorios necesarios para una vista que no entran en el modelo original
             return View("NuevoUsuario", model);
         }
@@ -96,9 +97,9 @@ namespace GameChanger.Controllers
             {
                 data.DNI = data.DNI.Trim().Replace(".", "");
             }
-            
+
             bool esDNI = _userAccountManager.ComprobDeDNI(data.DNI);
-            if (!esDNI)  
+            if (!esDNI)
             {
                 ModelState.AddModelError("DNI", "Ingresar DNI con Formato Válido");
                 valid = false;
@@ -121,23 +122,19 @@ namespace GameChanger.Controllers
                 ModelState.AddModelError("Password", "Ingresar Contraseña es obligatorio");
                 valid = false;
 
-                if(!PasswordLenghtIsCorrect(data.Password) || !PasswordHasUpperCase(data.Password) || !PasswordHasNumber(data.Password) || !PasswordHasSpecialChar(data.Password))
-                {
-                    ModelState.AddModelError("Password", "La contraseña debe tener al menos 8 carecteres con una mayuscula 1 numero y un simbolo");
-                    valid = false;
-                }
-
-
-
+            }
+            if (!PasswordLenghtIsCorrect(data.Password) || !PasswordHasUpperCase(data.Password) || !PasswordHasNumber(data.Password) || !PasswordHasSpecialChar(data.Password))
+            {
+                ModelState.AddModelError("Password", "La contraseña debe tener al menos 8 carecteres con una mayuscula 1 numero y un simbolo");
+                valid = false;
             }
 
 
-
-            if (valid) //Ultimo paso
+            if (valid) //Ultimo paso 
             {
                 data.CreationDate = DateTime.Now;
                 data.IsActive = true;
-                _userAccountManager.Save(data);
+                _userAccountManager.Save(data);   // TODO:Agregar encriptación de contraseña !!!!!!!!!!!!!
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -145,19 +142,19 @@ namespace GameChanger.Controllers
                 var provinces = _userAccountManager.GetProvinces();
                 ViewBag.Provinces = provinces; // Sirve para sumar una lista u accesorios necesarios para una vista que no entran en el modelo original
                 return View("NuevoUsuario", data);
-            } 
+            }
         }
 
         private bool PasswordHasSpecialChar(string password) //!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
         {
             string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
-            
+
             foreach (char c in password)
             {
-                foreach (char c2 in symbols) 
+                foreach (char c2 in symbols)
                 {
-                    if (c == c2) 
-                    return true;
+                    if (c == c2)
+                        return true;
                 }
 
             }
@@ -167,31 +164,31 @@ namespace GameChanger.Controllers
 
         private bool PasswordHasNumber(string password)
         {
-            
-            bool isNum = false;  
+
+            bool isNum = false;
             int result;
             foreach (char item in password)
             {
-              isNum= int.TryParse(item.ToString(), out result);
+                isNum = int.TryParse(item.ToString(), out result);
                 if (isNum)
                 {
                     return true;
 
                 }
             }
-             return false;  
+            return false;
 
         }
 
         private bool PasswordHasUpperCase(string password)
-        {   
-         
+        {
+
             string passUpper = password.ToUpper();
-            string passOrig =password;
+            string passOrig = password;
             int n = 0;
-            foreach (char c in passUpper )
-            { 
-                if ( c == passOrig[n])
+            foreach (char c in passUpper)
+            {
+                if (c == passOrig[n])
                 {
                     return true;
 
@@ -199,19 +196,38 @@ namespace GameChanger.Controllers
                 else
                 {
                     n++;
-                } 
-                
+                }
+
             }
-                    return false;   
+            return false;
         }
 
         private bool PasswordLenghtIsCorrect(string password)
         {
-            if (password.Length> 7 && password.Length<17)
+            if (password.Length > 7 && password.Length < 17)
             {
-              return true;
+                return true;
             }
             return false;
         }
+        [HttpGet]
+        public IActionResult UserAccountList()
+        {
+            List<UserAccountViewModel> list = new List<UserAccountViewModel>();
+            list = _userAccountManager.UserAccountViewModelGetAll();
+            return View("UserAccountList",list);
+
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)  
+       {
+            
+            _userAccountManager.Delete(id);
+            return RedirectToAction("UserAccountList"); // podes devolver el resultado de otra función que ya está declarada
+
+        }
+
     }
+
 }
